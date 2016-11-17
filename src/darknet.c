@@ -12,6 +12,7 @@
 #include "opencv2/highgui/highgui_c.h"
 #endif
 
+extern void predict_classifier(char *datacfg, char *cfgfile, char *weightfile, char *filename, int top);
 extern void run_voxel(int argc, char **argv);
 extern void run_yolo(int argc, char **argv);
 extern void run_detector(int argc, char **argv);
@@ -127,7 +128,7 @@ void oneoff(char *cfgfile, char *weightfile, char *outfile)
     network net = parse_network_cfg(cfgfile);
     int oldn = net.layers[net.n - 2].n;
     int c = net.layers[net.n - 2].c;
-    net.layers[net.n - 2].n = 7879;
+    net.layers[net.n - 2].n = 9372;
     net.layers[net.n - 2].biases += 5;
     net.layers[net.n - 2].weights += 5*c;
     if(weightfile){
@@ -388,6 +389,8 @@ int main(int argc, char **argv)
         run_vid_rnn(argc, argv);
     } else if (0 == strcmp(argv[1], "coco")){
         run_coco(argc, argv);
+    } else if (0 == strcmp(argv[1], "classify")){
+        predict_classifier("cfg/imagenet1k.dataset", argv[2], argv[3], argv[4], 5);
     } else if (0 == strcmp(argv[1], "classifier")){
         run_classifier(argc, argv);
     } else if (0 == strcmp(argv[1], "art")){
